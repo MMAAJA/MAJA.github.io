@@ -2,8 +2,8 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Chat de Geología y Deflexiones en Excavaciones Profundas</title>
-  <!-- Se incluye la librería de RiveScript a través de un CDN -->
+  <title>Chat: Experto en Geología y Excavaciones Profundas</title>
+  <!-- Se carga la librería RiveScript desde un CDN -->
   <script src="https://unpkg.com/rivescript@latest/dist/rivescript.min.js"></script>
   <style>
     body {
@@ -20,7 +20,7 @@
       border: 1px solid #ddd;
       border-radius: 8px;
       max-width: 600px;
-      width: 100%;
+      width: 90%;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       padding: 20px;
     }
@@ -73,53 +73,62 @@
 </head>
 <body>
   <div class="chat-container">
-    <div class="chat-header">Experto en Geología y Excavaciones</div>
+    <div class="chat-header">Experto en Geología y Excavaciones Profundas</div>
     <div id="chatBox" class="chat-box">
       <!-- Los mensajes se mostrarán aquí -->
     </div>
     <div class="user-input">
-      <input type="text" id="userMessage" placeholder="Escribe tu consulta sobre deflexiones, excavaciones o geología...">
+      <input type="text" id="userMessage" placeholder="Escribe aquí tu consulta sobre geología, excavaciones o deflexiones...">
       <button onclick="sendMessage()">Enviar</button>
     </div>
   </div>
 
   <script>
-    // Creamos una instancia de RiveScript
+    // Crear una instancia de RiveScript
     var bot = new RiveScript();
 
-    // Definimos las reglas del chatbot: estos son los "scripts" que le indican cómo responder.
-    // Puedes ampliar o modificar estos patrones para personalizar las respuestas.
+    // Cargamos el "script" con las reglas del chatbot.
+    // Puedes ampliar o modificar estas respuestas según lo necesites.
     bot.stream(`
 + hola
-- ¡Hola! Soy tu experto en geología especializado en deflexiones en excavaciones profundas. ¿En qué puedo ayudarte hoy?
+- ¡Hola! Soy tu experto en geología y excavaciones profundas. ¿Qué consulta tienes?
 
-+ como estas
-- ¡Muy bien, gracias! ¿Qué consulta tienes sobre geología, excavaciones profundas o deflexiones?
++ buenos dias
+- ¡Buenos días! ¿En qué puedo ayudarte relacionado con geología o excavaciones profundas?
 
-+ *excavación profunda*
-- Las excavaciones profundas demandan un estudio riguroso del terreno y sus deflexiones para garantizar la estabilidad de los muros. ¿Deseas conocer más detalles al respecto?
++ excavación*
+- Las excavaciones profundas son complejas y requieren análisis geotécnicos rigurosos para evitar problemas en deflexiones y estabilidad. ¿Quieres saber más?
 
-+ *deflexión*
-- Las deflexiones en los muros se producen cuando las fuerzas del terreno y otros factores geológicos ejercen presión sobre ellos. ¿Te gustaría saber cómo se mitigan estas deflexiones?
++ deflexión*
+- Las deflexiones ocurren cuando las fuerzas del terreno afectan la estabilidad de los muros de contención. Es fundamental analizar estos cambios para garantizar la seguridad.
+  
++ geología
+- La geología es la ciencia que estudia la composición, estructura e historia de la Tierra. Esto es clave para entender cómo se comporta el terreno en proyectos de excavación.
 
-+ *geología*
-- La geología estudia las propiedades, la composición y la historia de la Tierra, lo que es fundamental para entender el comportamiento del terreno en excavaciones profundas.
++ *profundo*
+- Recuerda que en excavaciones profundas, la estabilidad se evalúa minuciosamente para evitar fallas estructurales y problemas con las deflexiones.
+  
++ *seguridad*
+- La seguridad en excavaciones profundas depende de análisis geotécnicos precisos, monitoreo continuo y medidas de mitigación de deflexiones.
+
++ *ayuda*
+- Claro, cuéntame cuál es tu duda específica sobre geología, excavaciones profundas o deflexiones.
 
 + *
-- Por favor, formula una pregunta específica sobre geología, excavaciones profundas o deflexiones para poder ayudarte mejor.
+- Por favor, formula una pregunta más específica sobre geología o deflexiones en excavaciones profundas para ayudarte de manera más precisa.
     `);
 
-    // Organiza las respuestas
+    // Ordenar las respuestas para asegurar una correcta coincidencia de patrones
     bot.sortReplies();
 
-    // Función para agregar mensajes al chat
+    // Función para agregar mensajes en el chat
     function appendChat(sender, text) {
       var chatBox = document.getElementById("chatBox");
       chatBox.innerHTML += `<div class="message"><strong>${sender}:</strong> ${text}</div>`;
       chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    // Función para procesar y responder al mensaje del usuario
+    // Función para procesar la entrada del usuario y generar una respuesta
     function sendMessage() {
       var inputField = document.getElementById("userMessage");
       var userText = inputField.value.trim();
@@ -127,10 +136,11 @@
       appendChat("Tú", userText);
       inputField.value = "";
       
-      // Obtener la respuesta del bot
+      // Obtener la respuesta del bot usando RiveScript
       var reply = bot.reply("local-user", userText);
       appendChat("Experto", reply);
     }
   </script>
 </body>
 </html>
+
