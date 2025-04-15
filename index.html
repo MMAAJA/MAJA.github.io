@@ -2,14 +2,16 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Chat Amigable sobre el Artículo</title>
+  <title>Chat sobre Deflexiones en Excavaciones Profundas en Muros</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      padding: 20px;
+      background: #f0f8ff;
+      margin: 20px;
       display: flex;
       justify-content: center;
+      align-items: center;
+      height: 90vh;
     }
     .chat-container {
       background: #fff;
@@ -17,14 +19,15 @@
       border-radius: 8px;
       width: 100%;
       max-width: 600px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       padding: 20px;
     }
     .chat-header {
       text-align: center;
-      margin-bottom: 10px;
-      font-size: 1.2em;
+      margin-bottom: 15px;
+      font-size: 1.3em;
       font-weight: bold;
+      color: #333;
     }
     .instructions {
       font-size: 0.9em;
@@ -33,7 +36,7 @@
       text-align: center;
     }
     .chat-box {
-      border: 1px solid #e0e0e0;
+      border: 1px solid #ccc;
       background: #fafafa;
       height: 300px;
       overflow-y: auto;
@@ -45,70 +48,70 @@
       margin: 10px 0;
     }
     .message strong {
-      margin-right: 4px;
+      margin-right: 5px;
     }
     .user-input {
       display: flex;
     }
     .user-input input[type="text"] {
       flex: 1;
-      padding: 8px;
-      font-size: 1em;
+      padding: 10px;
       border: 1px solid #ccc;
       border-radius: 4px;
+      font-size: 1em;
     }
     .user-input button {
-      padding: 8px 16px;
+      padding: 10px 16px;
       margin-left: 10px;
       border: none;
-      background: #007BFF;
+      background: #28a745;
       color: #fff;
       font-size: 1em;
       border-radius: 4px;
       cursor: pointer;
     }
     .user-input button:hover {
-      background: #0056b3;
+      background: #218838;
     }
   </style>
 </head>
 <body>
   <div class="chat-container">
-    <div class="chat-header">Chat sobre el Artículo</div>
+    <div class="chat-header">Chat sobre Deflexiones en Excavaciones Profundas en Muros</div>
     <div class="instructions">
-      Esta herramienta está diseñada únicamente para conversar sobre el contenido e ideas del artículo.  
-      Si haces preguntas fuera de ese contexto, responderá que solo puede hablar sobre lo tratado en el artículo.
+      ¡Hola! Soy tu asistente simpático y estoy aquí para conversar sobre deflexiones en excavaciones profundas en muros. 
+      Puedes preguntarme cualquier cosa y te responderé basándome en el tema.
     </div>
     <div id="chatBox" class="chat-box">
-      <!-- Aquí se mostrarán los mensajes -->
+      <!-- Los mensajes se mostrarán aquí -->
     </div>
     <div class="user-input">
       <input type="text" id="userMessage" placeholder="Escribe tu consulta...">
       <button onclick="sendMessage()">Enviar</button>
     </div>
   </div>
-  
-  <script>
-    // Suponemos que "articleContent" es el contenido extraído del PDF (esto se debe procesar en el servidor).
-    // Por ejemplo, podrías cargar el contenido desde un endpoint y almacenarlo en esta variable.
-    const articleContent = "Aquí iría el contenido del artículo extraído del PDF. Este contenido abarca los temas, ideas y conceptos clave que se tratan en el documento.";
 
-    // Función para agregar mensajes al chat.
+  <script>
+    // Información de referencia sobre el tema. 
+    // Este contenido representa un resumen o los puntos clave acerca de deflexiones en excavaciones profundas en muros.
+    const subjectInfo = "Las deflexiones en excavaciones profundas en muros son deformaciones que pueden presentarse en los muros de contención o en estructuras de excavación profunda debido a factores como las cargas del terreno, la presión del agua subterránea y las características del suelo. Un análisis adecuado de estas deflexiones es fundamental para garantizar la estabilidad y seguridad de las estructuras y prevenir fallas estructurales.";
+
+    // Función para agregar mensajes al chat
     function appendChat(sender, text) {
       const chatBox = document.getElementById('chatBox');
       chatBox.innerHTML += `<div class="message"><strong>${sender}:</strong> ${text}</div>`;
       chatBox.scrollTop = chatBox.scrollHeight;
     }
-    
+
     // Función que arma el prompt para la consulta.
-    // Se envía una instrucción al motor para que actúe como experto en el contenido del artículo.
+    // Se instruye al motor para que responda de forma simpática y amigable, basándose en el tema de deflexiones.
     function buildPrompt(userQuery) {
-      return `Eres un experto en el artículo cuyo contenido es:\n"${articleContent}"\nSolo responde basado en las ideas y temas tratados en el artículo. Si la consulta no se relaciona, intenta extrapolar ideas o indica que la pregunta está fuera del contexto. Consulta: ${userQuery}\nRespuesta:`;
+      return `Eres un experto simpático en deflexiones en excavaciones profundas en muros. Aquí tienes información para recordar: ${subjectInfo}\nResponde de forma clara, amigable y profesional a la siguiente consulta: ${userQuery}\nRespuesta:`;
     }
-    
-    // Función que simula la llamada a la API del motor (aquí se debe integrar la llamada real).
+
+    // Función simulada que "llama" al motor de respuestas
     async function fetchResponse(prompt) {
-      // Ejemplo de llamada a la API de un motor GPT (comentado, integrar según tu backend):
+      // Ejemplo de llamada a una API real (comentado para este ejemplo, debes implementarlo de forma segura):
       /*
       try {
         const response = await fetch('https://tu-servidor.com/api/generarRespuesta', {
@@ -122,16 +125,15 @@
         return data.respuesta;
       } catch (error) {
         console.error('Error al consultar la API:', error);
-        return "Hubo un error al procesar tu consulta.";
+        return "Disculpa, ha ocurrido un error al procesar tu consulta.";
       }
       */
       
-      // Simulación: En este ejemplo se devuelve una respuesta simulada.
-      // Debes reemplazar esta parte con la integración real a la API en tu entorno seguro.
-      return "Esta es una respuesta simulada basada en el contenido del artículo.";
+      // Respuesta simulada para efectos de demostración
+      return "¡Qué buena pregunta! Las deflexiones en excavaciones profundas se deben analizar cuidadosamente para garantizar la estabilidad de los muros y prevenir problemas estructurales.";
     }
-    
-    // Función que envía el mensaje y muestra la respuesta.
+
+    // Función que envía el mensaje del usuario y muestra la respuesta del "asistente"
     async function sendMessage() {
       const inputField = document.getElementById('userMessage');
       const userText = inputField.value.trim();
@@ -140,15 +142,16 @@
       appendChat("Tú", userText);
       inputField.value = "";
       
-      // Armar el prompt para enviar al motor de respuestas.
+      // Construir el prompt utilizando la consulta y la información del tema
       const prompt = buildPrompt(userText);
       
-      // Llamada a la API para obtener la respuesta (simulada en este caso).
-      const respuesta = await fetchResponse(prompt);
+      // Simular la obtención de una respuesta (reemplaza fetchResponse con tu integración real)
+      const responseText = await fetchResponse(prompt);
       
-      appendChat("Asistente", respuesta);
+      appendChat("Asistente", responseText);
     }
   </script>
 </body>
 </html>
+
 
