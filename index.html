@@ -2,11 +2,12 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>GeoTunnel Expert - Asistente de Excavaciones Profundas</title>
+  <title>GeoTunnel Expert - Versión Funcional</title>
   <style>
+    /* Estilos mejorados */
     body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: #e9ecef;
+      font-family: 'Arial', sans-serif;
+      background: #f4f7f6;
       margin: 0;
       display: flex;
       justify-content: center;
@@ -14,158 +15,137 @@
       min-height: 100vh;
     }
     .chat-container {
-      background: #fff;
-      border-radius: 12px;
-      max-width: 800px;
+      background: white;
       width: 95%;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-      overflow: hidden;
+      max-width: 800px;
+      border-radius: 10px;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+      margin: 20px;
     }
     .chat-header {
       background: #2c3e50;
       color: white;
-      padding: 1.2rem;
-      font-size: 1.4em;
-      font-weight: 600;
+      padding: 15px;
       text-align: center;
+      border-radius: 10px 10px 0 0;
     }
     .chat-box {
-      height: 500px;
+      height: 400px;
       overflow-y: auto;
       padding: 20px;
-      background: #f8f9fa;
+      background: #f9f9f9;
     }
     .message {
-      margin: 15px 0;
-      padding: 12px 18px;
-      border-radius: 8px;
+      margin: 10px;
+      padding: 12px 15px;
+      border-radius: 5px;
       max-width: 80%;
-      animation: fadeIn 0.3s ease;
     }
     .user-message {
       background: #e3f2fd;
       margin-left: auto;
-      border: 1px solid #bbdefb;
     }
     .bot-message {
       background: white;
-      border: 1px solid #dee2e6;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      border: 1px solid #eee;
     }
     .input-area {
       padding: 15px;
-      background: white;
-      border-top: 1px solid #eee;
       display: flex;
       gap: 10px;
+      background: white;
     }
-    input[type="text"] {
+    input {
       flex: 1;
-      padding: 12px;
+      padding: 10px;
       border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 1em;
+      border-radius: 5px;
     }
     button {
-      padding: 12px 24px;
       background: #2c3e50;
       color: white;
       border: none;
-      border-radius: 6px;
+      padding: 10px 20px;
+      border-radius: 5px;
       cursor: pointer;
-      transition: background 0.2s;
-    }
-    button:hover {
-      background: #34495e;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
   <div class="chat-container">
-    <div class="chat-header">GeoTunnel Expert - Asistencia en Excavaciones Profundas</div>
-    <div id="chatBox" class="chat-box">
-      <div class="message bot-message">
-        <strong>Experto:</strong> Bienvenido. Soy un especialista en geología aplicada y análisis de deflexiones en excavaciones profundas. ¿En qué puedo asistirte hoy?<br>
-        Ejemplos de consultas:<br>
-        - Análisis de estabilidad en túneles arcillosos<br>
-        - Métodos de monitorización de deformaciones<br>
-        - Selección de sistemas de sostenimiento
-      </div>
+    <div class="chat-header">Asistente de Geotécnica Funcional</div>
+    <div class="chat-box" id="chatBox">
+      <div class="message bot-message">Experto: Hola, soy tu asistente técnico en geología y excavaciones. ¿Qué necesitas analizar hoy?</div>
     </div>
     <div class="input-area">
-      <input type="text" id="userMessage" placeholder="Escribe tu consulta técnica..." onkeypress="handleKeyPress(event)">
+      <input type="text" id="userInput" placeholder="Ej: ¿Cómo calcular deflexiones en suelos arcillosos?">
       <button onclick="sendMessage()">Enviar</button>
     </div>
   </div>
 
   <script>
-    const API_URL = "https://api-inference.huggingface.co/v1/chat/completions";
     const API_KEY = "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";
+    const MODEL = "mistralai/Mistral-7B-Instruct-v0.2"; // Modelo gratuito compatible
 
-    const systemPrompt = `Actúa como un ingeniero geotécnico senior con 20 años de experiencia en excavaciones profundas y análisis de deformaciones. Especializado en:
-    - Mecánica de suelos y rocas
-    - Análisis numérico de estabilidad
-    - Sistemas de monitorización (inclinómetros, extensómetros)
-    - Técnicas de mitigación de deformaciones
-    
-    Respuestas profesionales pero accesibles. Usa términos técnicos precisos (ej: "plasticidad", "curva esfuerzo-deformación", "modelos constitutivos") pero explica conceptos complejos cuando sea necesario. Si una pregunta es ambigua en el contexto geotécnico, pide clarificación. 
-    Enfoque principal: análisis de deflexiones, comportamiento del terreno, métodos constructivos y seguridad en excavaciones profundas.`;
-
-    let messages = [
-      { role: "system", content: systemPrompt },
-      { role: "assistant", content: "Bienvenido. Soy un especialista en geología aplicada y análisis de deflexiones en excavaciones profundas. ¿En qué puedo asistirte hoy?" }
+    let history = [
+      {
+        role: "system",
+        content: `Eres un ingeniero geotécnico experto en excavaciones profundas. Responde solo sobre:
+        - Análisis de deformaciones del terreno
+        - Estabilidad de taludes y túneles
+        - Técnicas de excavación segura
+        - Mecánica de suelos y rocas
+        
+        Si la pregunta no es técnica, explica que solo puedes responder consultas de geotecnia.
+        Usa ejemplos prácticos y fórmulas cuando sea relevante.`
+      }
     ];
 
-    function appendMessage(text, isUser) {
-      const chatBox = document.getElementById('chatBox');
-      const messageDiv = document.createElement('div');
-      messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
-      messageDiv.innerHTML = `<strong>${isUser ? 'Tú' : 'Experto'}:</strong> ${text}`;
-      chatBox.appendChild(messageDiv);
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
     async function sendMessage() {
-      const input = document.getElementById('userMessage');
-      const userText = input.value.trim();
-      if (!userText) return;
+      const userInput = document.getElementById('userInput');
+      const text = userInput.value.trim();
+      if (!text) return;
 
-      appendMessage(userText, true);
-      input.value = "";
-      
-      messages.push({ role: "user", content: userText });
+      // Mostrar mensaje del usuario
+      const chatBox = document.getElementById('chatBox');
+      chatBox.innerHTML += `<div class="message user-message">Tú: ${text}</div>`;
+      userInput.value = '';
 
       try {
-        const response = await fetch(API_URL, {
+        const response = await fetch("https://api-inference.huggingface.co/v1/chat/completions", {
           method: "POST",
           headers: {
             "Authorization": `Bearer ${API_KEY}`,
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            model: "meta-llama/Llama-3-70B-Instruct",
-            messages: messages,
-            temperature: 0.5,
-            max_tokens: 300,
-            top_p: 0.9,
-            frequency_penalty: 0.2
+            model: MODEL,
+            messages: [...history, {role: "user", content: text}],
+            temperature: 0.7,
+            max_tokens: 250
           })
         });
 
         const data = await response.json();
-        if (data.choices?.[0]?.message?.content) {
-          const botResponse = data.choices[0].message.content;
-          messages.push({ role: "assistant", content: botResponse });
-          appendMessage(botResponse, false);
-        } else {
-          appendMessage("Error al procesar la consulta. Por favor, reformula tu pregunta.", false);
-        }
+        
+        if (!response.ok) throw new Error(data.error || "Error en la API");
+        if (!data.choices?.[0]?.message?.content) throw new Error("Respuesta inválida");
+
+        const botResponse = data.choices[0].message.content;
+        history.push({role: "assistant", content: botResponse});
+        chatBox.innerHTML += `<div class="message bot-message">Experto: ${botResponse}</div>`;
+        
       } catch (error) {
-        console.error("Error:", error);
-        append
-::contentReference[oaicite:0]{index=0}
- 
+        console.error(error);
+        chatBox.innerHTML += `<div class="message bot-message" style="color:red">Error: ${
+          error.message.includes("quota") 
+            ? "Límite de consultas alcanzado (gratuito). Prueba más tarde o actualiza tu cuenta Hugging Face." 
+            : "Error técnico - Reformula tu pregunta"
+        }</div>`;
+      }
+      
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+  </script>
+</body>
+</html>
