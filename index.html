@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Chat sobre Deflexiones en Excavaciones Profundas en Muros</title>
+  <title>Chat de Geología y Deflexiones en Excavaciones Profundas</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -77,10 +77,10 @@
 </head>
 <body>
   <div class="chat-container">
-    <div class="chat-header">Chat sobre Deflexiones en Excavaciones Profundas en Muros</div>
+    <div class="chat-header">Asistente de Geología y Excavaciones</div>
     <div class="instructions">
-      ¡Hola! Soy tu asistente simpático y estoy aquí para conversar sobre deflexiones en excavaciones profundas en muros. 
-      Puedes preguntarme cualquier cosa y te responderé basándome en el tema.
+      Soy un experto en geología y en deflexiones de excavaciones profundas.  
+      Pregúntame cualquier cosa sobre estos temas y te responderé de forma amigable y profesional.
     </div>
     <div id="chatBox" class="chat-box">
       <!-- Los mensajes se mostrarán aquí -->
@@ -92,10 +92,6 @@
   </div>
 
   <script>
-    // Información de referencia sobre el tema. 
-    // Este contenido representa un resumen o los puntos clave acerca de deflexiones en excavaciones profundas en muros.
-    const subjectInfo = "Las deflexiones en excavaciones profundas en muros son deformaciones que pueden presentarse en los muros de contención o en estructuras de excavación profunda debido a factores como las cargas del terreno, la presión del agua subterránea y las características del suelo. Un análisis adecuado de estas deflexiones es fundamental para garantizar la estabilidad y seguridad de las estructuras y prevenir fallas estructurales.";
-
     // Función para agregar mensajes al chat
     function appendChat(sender, text) {
       const chatBox = document.getElementById('chatBox');
@@ -103,15 +99,15 @@
       chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    // Función que arma el prompt para la consulta.
-    // Se instruye al motor para que responda de forma simpática y amigable, basándose en el tema de deflexiones.
+    // Función que arma el prompt para la consulta
+    // Se instruye al motor para que actúe como experto en geología y en deflexiones de excavaciones profundas
     function buildPrompt(userQuery) {
-      return `Eres un experto simpático en deflexiones en excavaciones profundas en muros. Aquí tienes información para recordar: ${subjectInfo}\nResponde de forma clara, amigable y profesional a la siguiente consulta: ${userQuery}\nRespuesta:`;
+      return `Eres un experto en geología y en deflexiones de excavaciones profundas. Basándote en tu amplio conocimiento y experiencia en estos temas, responde de forma amigable y profesional la siguiente consulta: ${userQuery}\nRespuesta:`;
     }
 
-    // Función simulada que "llama" al motor de respuestas
+    // Función que simula la llamada a la API del motor de respuestas
     async function fetchResponse(prompt) {
-      // Ejemplo de llamada a una API real (comentado para este ejemplo, debes implementarlo de forma segura):
+      // Ejemplo de llamada a una API real (comentado para este ejemplo; implementa este bloque en un entorno seguro):
       /*
       try {
         const response = await fetch('https://tu-servidor.com/api/generarRespuesta', {
@@ -125,15 +121,15 @@
         return data.respuesta;
       } catch (error) {
         console.error('Error al consultar la API:', error);
-        return "Disculpa, ha ocurrido un error al procesar tu consulta.";
+        return "Lo siento, ha ocurrido un error al procesar tu consulta.";
       }
       */
       
-      // Respuesta simulada para efectos de demostración
-      return "¡Qué buena pregunta! Las deflexiones en excavaciones profundas se deben analizar cuidadosamente para garantizar la estabilidad de los muros y prevenir problemas estructurales.";
+      // Respuesta simulada para efectos de demostración:
+      return "¡Qué interesante consulta! En excavaciones profundas, las deflexiones se deben analizar con detenimiento para garantizar la estabilidad de los muros y la seguridad de la estructura. ¿Tienes alguna pregunta específica?";
     }
 
-    // Función que envía el mensaje del usuario y muestra la respuesta del "asistente"
+    // Función para enviar el mensaje y mostrar la respuesta del asistente
     async function sendMessage() {
       const inputField = document.getElementById('userMessage');
       const userText = inputField.value.trim();
@@ -142,10 +138,10 @@
       appendChat("Tú", userText);
       inputField.value = "";
       
-      // Construir el prompt utilizando la consulta y la información del tema
+      // Construir el prompt usando la consulta del usuario
       const prompt = buildPrompt(userText);
       
-      // Simular la obtención de una respuesta (reemplaza fetchResponse con tu integración real)
+      // Llamar a la "API" para obtener una respuesta (simulada en este ejemplo)
       const responseText = await fetchResponse(prompt);
       
       appendChat("Asistente", responseText);
@@ -153,5 +149,3 @@
   </script>
 </body>
 </html>
-
-
