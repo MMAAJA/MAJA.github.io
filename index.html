@@ -82,29 +82,36 @@
   </div>
 
   <script>
-    // URL de la API de inferencia de Hugging Face para el modelo DialoGPT
-    const API_URL = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium";
-    // Tu API Key de Hugging Face proporcionada:
-    const API_KEY = "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";
+    const API_URL = "https://api-inference.huggingface.co/v1/chat/completions";
+    const API_KEY = "hf_..."; // Reemplaza con tu clave de API válida
 
-    // Historial de conversación para mantener el contexto (opcional)
-    let conversationHistory = "Eres un experto en geología y en deflexiones en excavaciones profundas. Responde de forma amigable y profesional:";
+    // Historial de conversación
+    let messages = [
+      {
+        role: "system",
+        content: "Eres un experto en geología y en deflexiones en excavaciones profundas. Responde de forma amigable y profesional. Si te preguntan sobre tu origen o quién te creó, responde que eres una prueba de una investigación liderada por Cristian, David y Carlos."
+      }
+    ];
 
-    // Función para agregar mensajes al chat
     function appendChat(sender, text) {
       const chatBox = document.getElementById('chatBox');
-      chatBox.innerHTML += `<div class="message"><strong>${sender}:</strong> ${text}</div>`;
+      const messageDiv = document.createElement('div');
+      messageDiv.classList.add('message');
+      messageDiv.innerHTML = `<strong>${sender}:</strong> ${text}`;
+      chatBox.appendChild(messageDiv);
       chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    // Función que arma el prompt completo para la consulta
-    function buildPrompt(userQuery) {
-      conversationHistory += "\nUsuario: " + userQuery + "\nExperto:";
-      return conversationHistory;
-    }
+    async function sendMessage() {
+      const inputField = document.getElementById('userMessage');
+      const userText = inputField.value.trim();
+      if (userText === "") return;
 
-    // Función que llama a la API de Hugging Face para obtener una respuesta
-    async function fetchResponse(prompt) {
+      appendChat("Tú", userText);
+      inputField.value = "";
+
+      messages.push({ role: "user", content: userText });
+
       try {
         const response = await fetch(API_URL, {
           method: "POST",
@@ -113,48 +120,27 @@
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            inputs: prompt,
-            parameters: {
-              max_length: 150,
-              temperature: 0.7,
-              top_p: 0.9
-            }
+            model: "meta-llama/Llama-3-70B-Instruct",
+            messages: messages,
+            max_tokens: 150,
+            temperature: 0.7,
+            top_p: 0.9
           })
         });
+
         const result = await response.json();
-        if (Array.isArray(result) && result.length > 0 && result[0].generated_text) {
-          // Se extrae la respuesta generada eliminando la parte del prompt si es necesario.
-          let generated = result[0].generated_text;
-          const idx = generated.indexOf("Experto:");
-          if (idx !== -1) {
-            generated = generated.substring(idx + "Experto:".length).trim();
-          }
-          return generated;
+        if (result.choices && result.choices.length > 0) {
+          const botMessage = result.choices[0].message.content.trim();
+          messages.push({ role: "assistant", content: botMessage });
+          appendChat("Experto", botMessage);
+        } else {
+          appendChat("Experto", "Lo siento, no pude procesar tu consulta en este momento.");
         }
-        return "Lo siento, no pude procesar tu consulta en este momento.";
       } catch (error) {
         console.error("Error al llamar a la API:", error);
-        return "Lo siento, ocurrió un error al procesar tu consulta.";
+        appendChat("Experto", "Lo siento, ocurrió un error al procesar tu consulta.");
       }
-    }
-
-    // Función que envía el mensaje y muestra la respuesta en el chat
-    async function sendMessage() {
-      const inputField = document.getElementById('userMessage');
-      const userText = inputField.value.trim();
-      if (userText === "") return;
-      
-      appendChat("Tú", userText);
-      inputField.value = "";
-      
-      const prompt = buildPrompt(userText);
-      const responseText = await fetchResponse(prompt);
-      
-      conversationHistory += " " + responseText;
-      appendChat("Experto", responseText);
     }
   </script>
 </body>
 </html>
-
-
