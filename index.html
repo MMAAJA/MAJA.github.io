@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -79,11 +78,6 @@
     button:hover {
       background: #34495e;
     }
-    .technical-terms {
-      font-style: italic;
-      color: #2c3e50;
-      font-weight: 500;
-    }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
@@ -109,7 +103,7 @@
   </div>
 
   <script>
-    const API_URL = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium";
+    const API_URL = "https://api-inference.huggingface.co/v1/chat/completions";
     const API_KEY = "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";
 
     const systemPrompt = `Actúa como un ingeniero geotécnico senior con 20 años de experiencia en excavaciones profundas y análisis de deformaciones. Especializado en:
@@ -119,7 +113,6 @@
     - Técnicas de mitigación de deformaciones
     
     Respuestas profesionales pero accesibles. Usa términos técnicos precisos (ej: "plasticidad", "curva esfuerzo-deformación", "modelos constitutivos") pero explica conceptos complejos cuando sea necesario. Si una pregunta es ambigua en el contexto geotécnico, pide clarificación. 
-    
     Enfoque principal: análisis de deflexiones, comportamiento del terreno, métodos constructivos y seguridad en excavaciones profundas.`;
 
     let messages = [
@@ -173,13 +166,6 @@
         }
       } catch (error) {
         console.error("Error:", error);
-        appendMessage("Error de conexión. Intenta nuevamente.", false);
-      }
-    }
-
-    function handleKeyPress(e) {
-      if (e.key === "Enter") sendMessage();
-    }
-  </script>
-</body>
-</html>
+        append
+::contentReference[oaicite:0]{index=0}
+ 
